@@ -33,4 +33,17 @@ class PizzaServiceTest {
         assertThat(pizza?.name).isEqualTo(name)
         assertThat(pizza?.type).isEqualTo(NEAPOLITAN)
     }
+
+    @Test
+    fun `SHOULD create a pizza WHEN given parameters are valid`() {
+        val newPizza = Pizza(name = "Some New Pizza", type = NEAPOLITAN)
+
+        `when`(pizzaPersistencePort.persistPizza(eq(newPizza))).thenReturn(newPizza.copy())
+
+        val createdPizza = pizzaService.create(newPizza)
+
+        assertThat(createdPizza).isNotNull
+        assertThat(createdPizza).isNotSameAs(newPizza)
+        assertThat(createdPizza).isEqualTo(newPizza)
+    }
 }
