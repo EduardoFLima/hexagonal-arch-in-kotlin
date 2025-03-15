@@ -21,4 +21,11 @@ data class PizzaDto(
             return PizzaDto(errors = errors)
         }
     }
+
+    fun toPizza(): Pizza {
+        return Pizza(
+            name = name!!,
+            type = type!!
+        )
+    }
 }

@@ -57,8 +57,10 @@ class PizzaServiceTest {
 
         `when`(pizzaPersistencePort.persistPizza(eq(newPizza))).thenReturn(newPizza.copy())
 
-        val createdPizza = pizzaService.create(newPizza)
+        val createdPizzaDto = pizzaService.create(newPizza)
+        assertThat(createdPizzaDto.errors).isEmpty()
 
+        val createdPizza =  createdPizzaDto.toPizza()
         assertThat(createdPizza).isNotNull
         assertThat(createdPizza).isNotSameAs(newPizza)
         assertThat(createdPizza).isEqualTo(newPizza)
@@ -68,11 +70,11 @@ class PizzaServiceTest {
     fun `SHOULD try to create a pizza and return error message WHEN pizza name length is less than 3`() {
         val newPizza = Pizza(name = "AB", type = NEAPOLITAN)
 
-        val createdPizza = pizzaService.create(newPizza)
+        val createdPizzaDto = pizzaService.create(newPizza)
 
-        assertThat(createdPizza).isNotNull
-        assertThat(createdPizza.errors).isNotEmpty
-        assertThat(createdPizza.errors).contains("Pizza name is too short")
+        assertThat(createdPizzaDto).isNotNull
+        assertThat(createdPizzaDto.errors).isNotEmpty
+        assertThat(createdPizzaDto.errors).contains("Pizza name is too short")
 
         verify(pizzaPersistencePort, never()).persistPizza(any())
     }
@@ -83,11 +85,11 @@ class PizzaServiceTest {
             "That's a very very very very very very very long pizza name and it is not accepted by the domain model"
         val newPizza = Pizza(name = longPizzaName, type = NEAPOLITAN)
 
-        val createdPizza = pizzaService.create(newPizza)
+        val createdPizzaDto = pizzaService.create(newPizza)
 
-        assertThat(createdPizza).isNotNull
-        assertThat(createdPizza.errors).isNotEmpty
-        assertThat(createdPizza.errors).contains("Pizza name is too long")
+        assertThat(createdPizzaDto).isNotNull
+        assertThat(createdPizzaDto.errors).isNotEmpty
+        assertThat(createdPizzaDto.errors).contains("Pizza name is too long")
 
         verify(pizzaPersistencePort, never()).persistPizza(any())
     }
