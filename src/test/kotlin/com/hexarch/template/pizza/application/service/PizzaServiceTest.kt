@@ -30,11 +30,25 @@ class PizzaServiceTest {
 
         `when`(pizzaPersistencePort.getPizzaByName(eq(name))).thenReturn(Pizza(name, NEAPOLITAN))
 
-        val pizza = pizzaService.get(name)
+        val pizzaDto = pizzaService.get(name)
 
-        assertThat(pizza).isNotNull
-        assertThat(pizza?.name).isEqualTo(name)
-        assertThat(pizza?.type).isEqualTo(NEAPOLITAN)
+        assertThat(pizzaDto).isNotNull
+        assertThat(pizzaDto.errors).isEmpty()
+        assertThat(pizzaDto.name).isEqualTo(name)
+        assertThat(pizzaDto.type).isEqualTo(NEAPOLITAN)
+    }
+
+    @Test
+    fun `SHOULD try to get a pizza and return error message WHEN it does not exist`() {
+        val name = "Margherita"
+
+        val pizzaDto = pizzaService.get(name)
+
+        assertThat(pizzaDto).isNotNull
+        assertThat(pizzaDto.errors).isNotEmpty
+        assertThat(pizzaDto.errors).contains("Pizza not found")
+        assertThat(pizzaDto.name).isNull()
+        assertThat(pizzaDto.type).isNull()
     }
 
     @Test

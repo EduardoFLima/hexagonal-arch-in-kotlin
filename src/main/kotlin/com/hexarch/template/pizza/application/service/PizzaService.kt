@@ -9,8 +9,10 @@ import com.hexarch.template.pizza.port.outbound.PizzaPersistencePort
 class PizzaService(
     private val pizzaPersistencePort: PizzaPersistencePort,
 ) : RetrievePizzaUseCase, CreatePizzaUseCase {
-    override fun get(name: String): Pizza? {
-        return pizzaPersistencePort.getPizzaByName(name)
+    override fun get(name: String): PizzaDto {
+        pizzaPersistencePort.getPizzaByName(name)?.let { return PizzaDto.fromPizza(it) }
+
+        return PizzaDto.withErrors(listOf("Pizza not found"))
     }
 
     override fun create(pizza: Pizza): PizzaDto {
