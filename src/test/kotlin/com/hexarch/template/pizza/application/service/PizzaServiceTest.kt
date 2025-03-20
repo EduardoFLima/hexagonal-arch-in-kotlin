@@ -1,5 +1,8 @@
 package com.hexarch.template.pizza.application.service
 
+import com.hexarch.template.pizza.application.error.BusinessError
+import com.hexarch.template.pizza.application.error.ErrorCode.PIZZA_NAME_NOT_VALID
+import com.hexarch.template.pizza.application.error.ErrorCode.PIZZA_NOT_FOUND
 import com.hexarch.template.pizza.domain.model.entity.Pizza
 import com.hexarch.template.pizza.domain.model.value.PizzaType.NEAPOLITAN
 import com.hexarch.template.pizza.port.outbound.PizzaPersistencePort
@@ -46,7 +49,7 @@ class PizzaServiceTest {
 
         assertThat(pizzaDto).isNotNull
         assertThat(pizzaDto.errors).isNotEmpty
-        assertThat(pizzaDto.errors).contains("Pizza not found")
+        assertThat(pizzaDto.errors).contains(BusinessError(Pizza::name, PIZZA_NOT_FOUND, "Pizza not found"))
         assertThat(pizzaDto.name).isNull()
         assertThat(pizzaDto.type).isNull()
     }
@@ -60,7 +63,7 @@ class PizzaServiceTest {
         val createdPizzaDto = pizzaService.create(newPizza)
         assertThat(createdPizzaDto.errors).isEmpty()
 
-        val createdPizza =  createdPizzaDto.toPizza()
+        val createdPizza = createdPizzaDto.toPizza()
         assertThat(createdPizza).isNotNull
         assertThat(createdPizza).isNotSameAs(newPizza)
         assertThat(createdPizza).isEqualTo(newPizza)
@@ -74,7 +77,8 @@ class PizzaServiceTest {
 
         assertThat(createdPizzaDto).isNotNull
         assertThat(createdPizzaDto.errors).isNotEmpty
-        assertThat(createdPizzaDto.errors).contains("Pizza name is too short")
+        assertThat(createdPizzaDto.errors)
+            .contains(BusinessError(Pizza::name, PIZZA_NAME_NOT_VALID, "Pizza name is too short"))
 
         verify(pizzaPersistencePort, never()).persistPizza(any())
     }
@@ -89,7 +93,8 @@ class PizzaServiceTest {
 
         assertThat(createdPizzaDto).isNotNull
         assertThat(createdPizzaDto.errors).isNotEmpty
-        assertThat(createdPizzaDto.errors).contains("Pizza name is too long")
+        assertThat(createdPizzaDto.errors)
+            .contains(BusinessError(Pizza::name, PIZZA_NAME_NOT_VALID, "Pizza name is too long"))
 
         verify(pizzaPersistencePort, never()).persistPizza(any())
     }

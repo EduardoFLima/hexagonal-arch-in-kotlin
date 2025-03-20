@@ -6,7 +6,7 @@ data class Pizza(
     val name: String,
     val type: PizzaType,
 ) {
-    fun validate(): String? {
+    fun errorInName(): String? {
         if (name.length > 100) {
             return "Pizza name is too long"
         }
