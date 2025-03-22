@@ -31,7 +31,7 @@ class PizzaServiceTest {
     fun `SHOULD get a pizza WHEN it exists in persistence layer`() {
         val name = "Margherita"
 
-        `when`(pizzaPersistencePort.getPizzaByName(eq(name))).thenReturn(Pizza(name, NEAPOLITAN))
+        `when`(pizzaPersistencePort.getPizzaByName(eq(name))).thenReturn(Pizza(name = name, type = NEAPOLITAN))
 
         val pizzaDto = pizzaService.get(name)
 
