@@ -1,5 +1,6 @@
 package com.hexarch.template.pizza.application.service
 
+import com.hexarch.template.pizza.application.dto.PizzaDto
 import com.hexarch.template.pizza.application.error.BusinessError
 import com.hexarch.template.pizza.application.error.ErrorCode.PIZZA_NAME_NOT_VALID
 import com.hexarch.template.pizza.application.error.ErrorCode.PIZZA_NOT_FOUND
@@ -60,7 +61,7 @@ class PizzaServiceTest {
 
         `when`(pizzaPersistencePort.persistPizza(eq(newPizza))).thenReturn(newPizza.copy())
 
-        val createdPizzaDto = pizzaService.create(newPizza)
+        val createdPizzaDto = pizzaService.create(PizzaDto.fromPizza(newPizza))
         assertThat(createdPizzaDto.errors).isEmpty()
 
         val createdPizza = createdPizzaDto.toPizza()
@@ -73,7 +74,7 @@ class PizzaServiceTest {
     fun `SHOULD try to create a pizza and return error message WHEN pizza name length is less than 3`() {
         val newPizza = Pizza(name = "AB", type = NEAPOLITAN)
 
-        val createdPizzaDto = pizzaService.create(newPizza)
+        val createdPizzaDto = pizzaService.create(PizzaDto.fromPizza(newPizza))
 
         assertThat(createdPizzaDto).isNotNull
         assertThat(createdPizzaDto.errors).isNotEmpty
@@ -89,7 +90,7 @@ class PizzaServiceTest {
             "That's a very very very very very very very long pizza name and it is not accepted by the domain model"
         val newPizza = Pizza(name = longPizzaName, type = NEAPOLITAN)
 
-        val createdPizzaDto = pizzaService.create(newPizza)
+        val createdPizzaDto = pizzaService.create(PizzaDto.fromPizza(newPizza))
 
         assertThat(createdPizzaDto).isNotNull
         assertThat(createdPizzaDto.errors).isNotEmpty

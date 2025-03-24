@@ -2,10 +2,21 @@ package com.hexarch.template.pizza.adapter.inbound.web.controller
 
 import com.hexarch.template.pizza.adapter.inbound.web.api.PizzaApi
 import com.hexarch.template.pizza.application.dto.PizzaDto
-import org.springframework.http.ResponseEntity
+import com.hexarch.template.pizza.application.service.PizzaService
+import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.ResponseStatus
+import org.springframework.web.bind.annotation.RestController
 
-class PizzaController : PizzaApi {
-    override fun getPizza(): ResponseEntity<PizzaDto> {
-        TODO("Not yet implemented")
+@RestController
+class PizzaController(val pizzaService: PizzaService) : PizzaApi {
+
+    @PostMapping("/v1/pizzas")
+    @ResponseStatus(HttpStatus.CREATED)
+    override fun getPizza(
+        @RequestBody pizzaDto: PizzaDto,
+    ): PizzaDto {
+        return pizzaService.create(pizzaDto)
     }
 }

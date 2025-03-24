@@ -8,7 +8,9 @@ import com.hexarch.template.pizza.domain.model.entity.Pizza
 import com.hexarch.template.pizza.port.inbound.CreatePizzaUseCase
 import com.hexarch.template.pizza.port.inbound.RetrievePizzaUseCase
 import com.hexarch.template.pizza.port.outbound.PizzaPersistencePort
+import org.springframework.stereotype.Service
 
+@Service
 class PizzaService(
     private val pizzaPersistencePort: PizzaPersistencePort,
 ) : RetrievePizzaUseCase, CreatePizzaUseCase {
@@ -18,7 +20,8 @@ class PizzaService(
         return pizzaDtoWithNotFoundError()
     }
 
-    override fun create(pizza: Pizza): PizzaDto {
+    override fun create(pizzaDto: PizzaDto): PizzaDto {
+        val pizza = pizzaDto.toPizza()
 
         pizza.errorInName()?.let { return pizzaDtoWithNameNotValidError(it) }
 
