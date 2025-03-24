@@ -25,7 +25,7 @@ import kotlin.test.Test
 // TODO remove it once database is set
 @EnableAutoConfiguration(exclude = [DataSourceAutoConfiguration::class])
 @AutoConfigureMockMvc
-class PizzaControllerIntegrationTest(
+class PizzaControllerApiTest(
     @Autowired val mockMvc: MockMvc,
 ) {
 
