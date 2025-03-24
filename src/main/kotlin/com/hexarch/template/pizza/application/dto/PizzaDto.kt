@@ -3,10 +3,12 @@ package com.hexarch.template.pizza.application.dto
 import com.hexarch.template.pizza.application.error.Error
 import com.hexarch.template.pizza.domain.model.entity.Pizza
 import com.hexarch.template.pizza.domain.model.value.PizzaType
+import jakarta.validation.constraints.NotEmpty
 import java.util.*
 
 data class PizzaDto(
     val id: UUID? = null,
+    @field:NotEmpty
     val name: String? = null,
     val type: PizzaType? = null,
     val errors: List<Error<Pizza, *>> = emptyList(),

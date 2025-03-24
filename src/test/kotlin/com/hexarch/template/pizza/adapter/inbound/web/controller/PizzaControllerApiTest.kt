@@ -77,7 +77,7 @@ class PizzaControllerApiTest(
         }
 
         @Test
-        fun `SHOULD try to create a pizza and return BAD REQUEST WHEN parameters are not valid`() {
+        fun `SHOULD try to create a pizza and return BAD REQUEST WHEN pizza name is not given`() {
             mockMvc.perform(
                 post("/v1/pizzas")
                     .contentType(MediaType.APPLICATION_JSON)
