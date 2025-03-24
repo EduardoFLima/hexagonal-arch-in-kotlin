@@ -4,7 +4,7 @@ import com.hexarch.template.pizza.domain.model.value.PizzaType
 import java.util.*
 
 data class Pizza(
-    val id: UUID = UUID.randomUUID(),
+    val id: UUID? = null,
     val name: String,
     val type: PizzaType,
 ) {

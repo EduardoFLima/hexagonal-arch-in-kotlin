@@ -28,7 +28,7 @@ data class PizzaDto(
 
     fun toPizza(): Pizza {
         return Pizza(
-            id = id ?: UUID.randomUUID(),
+            id = id,
             name = name!!,
             type = type!!
         )
