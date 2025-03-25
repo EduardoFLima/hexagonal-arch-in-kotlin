@@ -1,10 +1,14 @@
 package com.hexarch.template.pizza.domain.model.entity
 
 import com.hexarch.template.pizza.domain.model.value.PizzaType
+import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.Id
 import java.util.*
 
+@Entity
 data class Pizza(
-    val id: UUID? = null,
+    @Id @GeneratedValue val id: UUID? = null,
     val name: String,
     val type: PizzaType,
 ) {
