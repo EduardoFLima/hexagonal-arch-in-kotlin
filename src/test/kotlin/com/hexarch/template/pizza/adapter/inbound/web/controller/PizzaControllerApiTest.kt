@@ -12,8 +12,6 @@ import org.junit.jupiter.params.provider.ValueSource
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.eq
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
@@ -26,8 +24,6 @@ import java.util.*
 import kotlin.test.Test
 
 @SpringBootTest
-// TODO remove it once database is set
-@EnableAutoConfiguration(exclude = [DataSourceAutoConfiguration::class])
 @AutoConfigureMockMvc
 class PizzaControllerApiTest(
     @Autowired val mockMvc: MockMvc,

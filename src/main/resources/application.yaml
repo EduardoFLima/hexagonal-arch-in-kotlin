@@ -1,3 +1,13 @@
 spring:
   application:
     name: hexagonal-arch-in-kotlin
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/pizza_db
+    username: pizza_user
+    password: secret
+
+  jpa:
+    properties:
+      hibernate:
+        default_schema: pizzas

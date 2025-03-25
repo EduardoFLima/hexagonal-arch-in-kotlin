@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    url: jdbc:tc:postgresql:15.3-alpine3.18:///postgres
+  jpa:
+    properties:
+      hibernate:
+        default_schema: pizzas_test
