@@ -29,10 +29,6 @@ class PizzaControllerApiTest(
     @Autowired val mockMvc: MockMvc,
 ) {
 
-    // TODO remove it once database is set
-    @MockitoBean
-    private lateinit var pizzaPersistencePort: PizzaPersistencePort
-
     @Nested
     inner class CreatePizzaApi {
 
@@ -40,12 +36,6 @@ class PizzaControllerApiTest(
         fun `SHOULD create a pizza WHEN parameters are valid`() {
             val pizzaName = "Mama mia"
             val pizzaType = NEAPOLITAN
-
-            // TODO remove it once database is set
-            val newPizzaId = UUID.randomUUID()
-            `when`(pizzaPersistencePort.persistPizza(eq(Pizza(name = pizzaName, type = NEAPOLITAN)))).thenReturn(
-                Pizza(newPizzaId, pizzaName, NEAPOLITAN)
-            )
 
             val mockMvcResult = mockMvc.perform(
                 post("/v1/pizzas")
