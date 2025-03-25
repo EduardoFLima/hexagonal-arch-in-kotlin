@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS pizza
+(
+    id   UUID NOT NULL,
+    name VARCHAR(150) NOT NULL,
+    type VARCHAR(100) NOT NULL,
+    PRIMARY KEY (id)
+);
