@@ -6,6 +6,9 @@ import com.hexarch.template.pizza.domain.model.value.PizzaType.NEAPOLITAN
 import com.hexarch.template.pizza.port.outbound.PizzaPersistencePort
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.NullSource
+import org.junit.jupiter.params.provider.ValueSource
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.eq
 import org.springframework.beans.factory.annotation.Autowired
@@ -91,6 +94,25 @@ class PizzaControllerApiTest(
             )
                 .andExpect(status().isBadRequest)
                 .andReturn()
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = ["", "rubbish"])
+        @NullSource
+        fun `SHOULD try to create a pizza and return BAD REQUEST WHEN pizza type is invalid`(type: String?) {
+            mockMvc.perform(
+                post("/v1/pizzas")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(
+                        """
+                    {
+                        ${if (type != null) """"type": "$type",""" else ""}
+                        "name": "My great pizza"
+                    }
+                    """.trimIndent()
+                    )
+            )
+                .andExpect(status().isBadRequest)
         }
     }
 }
