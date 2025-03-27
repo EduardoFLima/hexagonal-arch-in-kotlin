@@ -4,5 +4,5 @@ import com.hexarch.template.pizza.application.dto.PizzaDto
 
 interface PizzaApi {
 
-    fun getPizza(pizzaDto: PizzaDto): PizzaDto
+    fun createPizza(pizzaDto: PizzaDto): PizzaDto
 }

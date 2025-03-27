@@ -15,7 +15,7 @@ class PizzaController(val pizzaService: PizzaService) : PizzaApi {
 
     @PostMapping("/v1/pizzas")
     @ResponseStatus(HttpStatus.CREATED)
-    override fun getPizza(
+    override fun createPizza(
         @Valid @RequestBody pizzaDto: PizzaDto,
     ): PizzaDto {
         return pizzaService.create(pizzaDto)
