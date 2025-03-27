@@ -8,7 +8,7 @@ import java.util.*
 @Component
 class PizzaPersistenceAdapter(val pizzaRepository: PizzaRepository) : PizzaPersistencePort {
     override fun getPizza(id: UUID): Pizza? {
-        TODO("Not yet implemented")
+        return pizzaRepository.getReferenceById(id)
     }
 
     override fun persistPizza(pizza: Pizza): Pizza {
