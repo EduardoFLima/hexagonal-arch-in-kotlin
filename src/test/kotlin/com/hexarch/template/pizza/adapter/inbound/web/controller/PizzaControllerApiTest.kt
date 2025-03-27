@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper
+import java.util.UUID
 import kotlin.test.Test
 
 @SpringBootTest
@@ -64,6 +65,24 @@ class PizzaControllerApiTest(
         }
 
         @Test
+        fun `SHOULD try to create a pizza and return BAD REQUEST WHEN pizza id is given`() {
+            mockMvc.perform(
+                post("/v1/pizzas")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(
+                        """
+                    {
+                      "id": "${UUID.randomUUID()}",
+                      "name": "a pizza with id",
+                      "type": "${NEAPOLITAN.name}"
+                    }
+                """.trimIndent()
+                    )
+            )
+                .andExpect(status().isBadRequest)
+        }
+
+        @Test
         fun `SHOULD try to create a pizza and return BAD REQUEST WHEN pizza name is not given`() {
             mockMvc.perform(
                 post("/v1/pizzas")
@@ -77,7 +96,6 @@ class PizzaControllerApiTest(
                     )
             )
                 .andExpect(status().isBadRequest)
-                .andReturn()
         }
 
         @ParameterizedTest
