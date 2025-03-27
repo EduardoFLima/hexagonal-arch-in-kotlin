@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.verify
+import java.util.UUID
 import kotlin.test.Test
 
 @ExtendWith(MockitoExtension::class)
@@ -29,28 +30,30 @@ class PizzaServiceTest {
     private lateinit var pizzaPersistencePort: PizzaPersistencePort
 
     @Test
-    fun `SHOULD get a pizza WHEN it exists in persistence layer`() {
+    fun `SHOULD get a pizza by id WHEN it exists in persistence layer`() {
+        val id = UUID.randomUUID()
         val name = "Margherita"
 
-        `when`(pizzaPersistencePort.getPizzaByName(eq(name))).thenReturn(Pizza(name = name, type = NEAPOLITAN))
+        `when`(pizzaPersistencePort.getPizza(eq(id))).thenReturn(Pizza(id, name, NEAPOLITAN))
 
-        val pizzaDto = pizzaService.get(name)
+        val pizzaDto = pizzaService.get(id)
 
         assertThat(pizzaDto).isNotNull
         assertThat(pizzaDto.errors).isEmpty()
+        assertThat(pizzaDto.id).isEqualTo(id)
         assertThat(pizzaDto.name).isEqualTo(name)
         assertThat(pizzaDto.type).isEqualTo(NEAPOLITAN)
     }
 
     @Test
     fun `SHOULD try to get a pizza and return error message WHEN it does not exist`() {
-        val name = "Margherita"
 
-        val pizzaDto = pizzaService.get(name)
+        val pizzaDto = pizzaService.get(UUID.randomUUID())
 
         assertThat(pizzaDto).isNotNull
         assertThat(pizzaDto.errors).isNotEmpty
         assertThat(pizzaDto.errors).contains(BusinessError(Pizza::name, PIZZA_NOT_FOUND, "Pizza not found"))
+        assertThat(pizzaDto.id).isNull()
         assertThat(pizzaDto.name).isNull()
         assertThat(pizzaDto.type).isNull()
     }

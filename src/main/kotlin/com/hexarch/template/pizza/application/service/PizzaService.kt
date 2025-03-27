@@ -9,13 +9,14 @@ import com.hexarch.template.pizza.port.inbound.CreatePizzaUseCase
 import com.hexarch.template.pizza.port.inbound.RetrievePizzaUseCase
 import com.hexarch.template.pizza.port.outbound.PizzaPersistencePort
 import org.springframework.stereotype.Service
+import java.util.UUID
 
 @Service
 class PizzaService(
     private val pizzaPersistencePort: PizzaPersistencePort,
 ) : RetrievePizzaUseCase, CreatePizzaUseCase {
-    override fun get(name: String): PizzaDto {
-        pizzaPersistencePort.getPizzaByName(name)?.let { return PizzaDto.fromPizza(it) }
+    override fun get(id: UUID): PizzaDto {
+        pizzaPersistencePort.getPizza(id)?.let { return PizzaDto.fromPizza(it) }
 
         return pizzaDtoWithNotFoundError()
     }
