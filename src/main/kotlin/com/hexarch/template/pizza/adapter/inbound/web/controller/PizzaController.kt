@@ -5,10 +5,8 @@ import com.hexarch.template.pizza.application.dto.PizzaDto
 import com.hexarch.template.pizza.application.service.PizzaService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.ResponseStatus
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
+import java.util.UUID
 
 @RestController
 class PizzaController(val pizzaService: PizzaService) : PizzaApi {
@@ -19,5 +17,12 @@ class PizzaController(val pizzaService: PizzaService) : PizzaApi {
         @Valid @RequestBody pizzaDto: PizzaDto,
     ): PizzaDto {
         return pizzaService.create(pizzaDto)
+    }
+
+    @GetMapping("/v1/pizzas/{pizzaId}")
+    override fun getPizza(
+        @PathVariable pizzaId: UUID
+    ): PizzaDto {
+        return pizzaService.get(pizzaId)
     }
 }

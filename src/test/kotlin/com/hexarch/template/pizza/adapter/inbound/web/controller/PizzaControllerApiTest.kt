@@ -1,32 +1,30 @@
 package com.hexarch.template.pizza.adapter.inbound.web.controller
 
+import com.hexarch.template.pizza.adapter.outbound.persistence.PizzaRepository
 import com.hexarch.template.pizza.application.dto.PizzaDto
 import com.hexarch.template.pizza.domain.model.entity.Pizza
 import com.hexarch.template.pizza.domain.model.value.PizzaType.NEAPOLITAN
-import com.hexarch.template.pizza.port.outbound.PizzaPersistencePort
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.NullSource
 import org.junit.jupiter.params.provider.ValueSource
-import org.mockito.Mockito.`when`
-import org.mockito.kotlin.eq
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
-import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper
-import java.util.*
 import kotlin.test.Test
 
 @SpringBootTest
 @AutoConfigureMockMvc
 class PizzaControllerApiTest(
     @Autowired val mockMvc: MockMvc,
+    @Autowired val pizzaRepository: PizzaRepository
 ) {
 
     @Nested
@@ -99,6 +97,44 @@ class PizzaControllerApiTest(
                     )
             )
                 .andExpect(status().isBadRequest)
+        }
+    }
+
+    @Nested
+    inner class GetPizzaApi {
+        @Test
+        fun `SHOULD get a pizza by ID WHEN it exists in db`() {
+            val pizzaName = "Mama mia"
+            val pizzaType = NEAPOLITAN
+
+            val pizza = pizzaRepository.save(Pizza(name = pizzaName, type = pizzaType))
+
+            val mockMvcResult = mockMvc.perform(
+                get("/v1/pizzas/{pizzaId}", pizza.id)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(
+                        """
+                    {
+                        "name": "$pizzaName",
+                        "type": "${pizzaType.name}"
+                    }
+                """.trimIndent()
+                    )
+            )
+                .andExpect(status().isOk)
+                .andReturn()
+
+            val contentAsString = mockMvcResult.response.contentAsString
+            assertThat(contentAsString).isNotEmpty()
+
+            val createdPizzaDto = ObjectMapper().readValue(contentAsString, PizzaDto::class.java)
+            assertThat(createdPizzaDto).isEqualTo(
+                PizzaDto(
+                    id = pizza.id,
+                    name = pizzaName,
+                    type = pizzaType
+                )
+            )
         }
     }
 }
