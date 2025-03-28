@@ -18,14 +18,14 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper
-import java.util.UUID
+import java.util.*
 import kotlin.test.Test
 
 @SpringBootTest
 @AutoConfigureMockMvc
 class PizzaControllerApiTest(
     @Autowired val mockMvc: MockMvc,
-    @Autowired val pizzaRepository: PizzaRepository
+    @Autowired val pizzaRepository: PizzaRepository,
 ) {
 
     @Nested
@@ -130,14 +130,6 @@ class PizzaControllerApiTest(
             val mockMvcResult = mockMvc.perform(
                 get("/v1/pizzas/{pizzaId}", pizza.id)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(
-                        """
-                    {
-                        "name": "$pizzaName",
-                        "type": "${pizzaType.name}"
-                    }
-                """.trimIndent()
-                    )
             )
                 .andExpect(status().isOk)
                 .andReturn()
