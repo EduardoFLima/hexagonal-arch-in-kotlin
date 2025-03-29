@@ -2,6 +2,8 @@ package com.hexarch.template.pizza.adapter.inbound.web.controller
 
 import com.hexarch.template.pizza.adapter.outbound.persistence.PizzaRepository
 import com.hexarch.template.pizza.application.dto.PizzaDto
+import com.hexarch.template.pizza.application.error.BusinessError
+import com.hexarch.template.pizza.application.error.ErrorCode.PIZZA_NOT_FOUND
 import com.hexarch.template.pizza.domain.model.entity.Pizza
 import com.hexarch.template.pizza.domain.model.value.PizzaType.NEAPOLITAN
 import org.assertj.core.api.Assertions.assertThat
@@ -143,6 +145,26 @@ class PizzaControllerApiTest(
                     id = pizza.id,
                     name = pizzaName,
                     type = pizzaType
+                )
+            )
+        }
+
+        @Test
+        fun `SHOULD try to get a pizza by ID and return 404 WHEN it does not exists in db`() {
+            val mockMvcResult = mockMvc.perform(
+                get("/v1/pizzas/{pizzaId}", UUID.randomUUID())
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+                .andExpect(status().isNotFound)
+                .andReturn()
+
+            val contentAsString = mockMvcResult.response.contentAsString
+            assertThat(contentAsString).isNotEmpty()
+
+            val createdPizzaDto = ObjectMapper().readValue(contentAsString, PizzaDto::class.java)
+            assertThat(createdPizzaDto).isEqualTo(
+                PizzaDto(
+                    errors = listOf(BusinessError(Pizza::name, PIZZA_NOT_FOUND, "Pizza not found"))
                 )
             )
         }

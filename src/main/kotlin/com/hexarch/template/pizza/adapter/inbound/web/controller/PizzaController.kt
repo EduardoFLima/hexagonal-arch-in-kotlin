@@ -5,8 +5,10 @@ import com.hexarch.template.pizza.application.dto.PizzaDto
 import com.hexarch.template.pizza.application.service.PizzaService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
+import org.springframework.http.HttpStatus.NOT_FOUND
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import java.util.UUID
+import java.util.*
 
 @RestController
 class PizzaController(val pizzaService: PizzaService) : PizzaApi {
@@ -21,8 +23,13 @@ class PizzaController(val pizzaService: PizzaService) : PizzaApi {
 
     @GetMapping("/v1/pizzas/{pizzaId}")
     override fun getPizza(
-        @PathVariable pizzaId: UUID
-    ): PizzaDto {
-        return pizzaService.get(pizzaId)
+        @PathVariable pizzaId: UUID,
+    ): ResponseEntity<PizzaDto> {
+        return pizzaService.get(pizzaId).let {
+            if (it.id != null) {
+                return ResponseEntity.ok(it)
+            }
+            ResponseEntity.status(NOT_FOUND).body(it)
+        }
     }
 }
